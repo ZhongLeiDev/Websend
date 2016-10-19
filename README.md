@@ -11,3 +11,11 @@
 7.本程序需要 Java运行环境支持，下载安装好 JDK 之后需要将本项目中的 java 文件夹中的 Pdf2PicUtils.jar 文件拷贝到 JDK 安装路径下的 "/jre/lib/ext" 目录下。<br><br>
 
 #项目说明
+1.界面说明：<br><br>
+web-msg-sender 主界面：<br>
+
+![image](https://github.com/ZhongLeiDev/ZhongLeiDev.github.io/blob/master/websendimg/index.png)
+
+此界面是 web-msg-sender 项目的使用主界面，查看 HTML 源码可以了解此项目的使用方法。
+
+本项目的服务器配置界面：<br>
