@@ -19,3 +19,7 @@ web-msg-sender 主界面：<br>
 此界面是 web-msg-sender 项目的使用主界面，查看 HTML 源码可以了解此项目的使用方法。
 
 本项目的服务器配置界面：<br>
+
+![image](https://github.com/ZhongLeiDev/ZhongLeiDev.github.io/blob/master/websendimg/Console.png)
+
+此界面是本项目的服务器设置界面，在本机的访问连接为 'http://localhost:2123/client.html'
