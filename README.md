@@ -1,5 +1,5 @@
 # Websend
-一个基于 web-msg-sender 开源框架的服务器推送程序
+一个基于 web-msg-sender 开源框架的服务器推送程序，可以在一台 PC 上向其它的可运行浏览器设备的浏览器上推送显示图片和显示信息。
 
 #注意事项
 1.本程序是基于 web-msg-sender 框架，在 Windows7-64 位系统下测试，web-msg-sender 项目地址为：<hrf>https://github.com/walkor/web-msg-sender/。</hrf><br><br>
@@ -36,4 +36,14 @@
 
 ![image](https://github.com/ZhongLeiDev/ZhongLeiDev.github.io/blob/master/websendimg/client.png)
 
-此界面用来接收服务器设置界面发送过来的指令，达到显示图片以及信息的作用。项目默认最大可以支持 12 个客户端同时在线正常运行，这 12 个客户端的 IP 地址分别是从 192.168.1.100~192,。168.1.111 ，如果需要支持超过 12 个客户端，需要在本项目文件夹下的 client.html(设置 IP 以及 uid )、Console.html (设置图片预览的幅数)文件进行相关信息的添加以及 server.php(对客户端 uid 进行识别与信息分发)的重新编辑。
+此界面用来接收服务器设置界面发送过来的指令，达到显示图片以及信息的作用。项目默认最大可以支持 12 个客户端同时在线正常运行，这 12 个客户端的 IP 地址分别是从 192.168.1.100~192.168.1.111 ，如果需要支持超过 12 个客户端，需要在本项目文件夹下的 client.html(设置 IP 以及 uid )、Console.html (设置图片预览的幅数)文件进行相关信息的添加以及 server.php(对客户端 uid 进行识别与信息分发)的重新编辑。
+
+2.使用方法：
+
+使用一台 PC 作为服务器，将本项目文件以及相关配置文件配置完全，在局域网内为服务器分配固定 IP 地址，保证 IP 地址在 192.168.1.XX 网段内，使用可以运行浏览器的网络设备（可以是PC机，PDA，单片机等）作为客户机，为客户机分配 IP ，可以设为静态，也可以设为动态，要看自己的需求，当然本项目 Client 端的  IP 地址已经设为固定（从 192.168.1.100~192.168.1.111 ），根据自己的使用情况可以自己适当改变。
+
+最终的形式就像这样：
+
+![image](https://github.com/ZhongLeiDev/ZhongLeiDev.github.io/blob/master/websendimg/aaa.png)
+
+有了这样一个系统可以以一台 PC 作为控制端，向其它的 Client 端同步推送图片显示信息或者直接推送指令信息。
