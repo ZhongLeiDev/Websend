@@ -44,6 +44,6 @@
 
 最终的形式就像这样：
 
-![image](https://github.com/ZhongLeiDev/ZhongLeiDev.github.io/blob/master/websendimg/aaa.png)
+![image](https://github.com/ZhongLeiDev/ZhongLeiDev.github.io/blob/master/websendimg/aaa.PNG)
 
 有了这样一个系统可以以一台 PC 作为控制端，向其它的 Client 端同步推送图片显示信息或者直接推送指令信息。
