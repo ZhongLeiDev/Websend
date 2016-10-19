@@ -1,0 +1,704 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel = "Shortcut Icon" href="pic/es.ico">
+<title>E-SOPSYSTEM</title>
+
+<!--图标样式-->
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+
+<!--主要样式-->
+<link rel="stylesheet" type="text/css" href="css/style.css" />
+
+<!--<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>-->
+<script src="../jQueryAssets/jquery-1.8.3.min.js" type="text/javascript"></script>
+<script src="../jQueryAssets/jquery-ui-1.9.2.button.custom.min.js" type="text/javascript"></script>
+<script src="../jQueryAssets/jquery-ui-1.9.2.progressbar.custom.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+var lastspan;//用于存储最近一次操作的span
+var $currentID = 'UNKNOW';//全局变量，用于存储当前操作的类别值，十分重要
+
+/*去除字符串空格的函数*/
+if (!String.prototype.trim){
+
+    /*---------------------------------------
+     * 清除字符串两端空格，包含换行符、制表符
+     *---------------------------------------*/
+    String.prototype.trim = function () { 
+        return this.replace(/(^[\s\n\t]+|[\s\n\t]+$)/g, "");
+    }
+    
+}
+
+$(function(){
+    $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+    $('.tree li.parent_li > span').on('click', function (e) {
+        var children = $(this).parent('li.parent_li').find(' > ul > li');//">"为层次选择器，">ul"表示直接ul子节点，">ul>li"表示直接ul子节点下的直接li子节点
+        if (children.is(":visible")) {
+            children.hide('fast');
+            $(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+        } else {
+            children.show('fast');
+            $(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+        }
+		
+        e.stopPropagation();
+    });
+	
+	var myspan = document.getElementsByTagName("span");
+	for(var i = 0, len = myspan.length; i < len; i++){
+		//myspan[i].style.backgroundColor = "#FFFF00";
+            myspan[i].onclick = function(){
+				if($(this).find('>i').hasClass("icon-leaf")){//判断点击的span是否为最底层节点，若为最底层节点则进行显示操作
+				/*innerHTML为标签内的内容（包含所有内容<a></a>等标签也包含）；innerText为标签内的Text内容，不包含内部标签*/
+				document.getElementById('rightpage-title').innerHTML = this.innerText;
+				$currentID = this.innerText.trim();//存储当前点击的span值并去除空格
+				refreshimgshow();//刷新图片显示
+				$( "#Progressbar1" ).progressbar("value", 0); //初始化进度条
+				$("#detail").html("当前选择的分支为："+$currentID);
+				//alert($currentID);
+				
+				//$(this).attr("color",rgba(252,2,6,1.00));
+				
+				//document.getElementById('critty').style.backgroundColor = "#FFFF00";
+				
+				/*进行点击操作之后，现将所有的span背景颜色置为白色（避免上次点击对这次点击造成影响），然后将当前点击的span背景置为黄色*/
+				/*for(var j = 0, len = myspan.length; j < len; j++){
+						myspan[j].style.backgroundColor = "#FFFFFF";
+				}*/
+				if(lastspan!=undefined){//判断变量是否赋值,若未赋值（即初始化时）则不进行任何操作，若已赋值，则进行相关操作
+				lastspan.css("backgroundColor","white");
+				}
+				$(this).css("backgroundColor","yellow");//用CSS改变SPAN的背景颜色
+				lastspan = $(this);
+				//alert(lastspan);
+				
+				//$myspan[i].hasClass("className") ? console.log("Has this class.") : console.log("Do not has this class.");
+				
+				//$(this).find('>i').hasClass("icon-leaf") ? alert("Has this class.") : alert("Do not has this class.");//获取span元素下的i子节点，并判断i子节点是否含有‘icon-leaf’类型的CSS样式
+				
+				//alert(this.childNodes.length);
+                //alert(i + "----" + this.innerHTML);
+            }
+			}
+        }
+	
+});
+</script>
+
+<style type="text/css">
+.left-side {
+	float: left;
+	width: 29%;
+	border-right: thin solid rgba(221,220,220,1.00);
+	height:900px;
+	margin-left: 2px;
+	min-height: 0px;
+	overflow-y: visible;
+	overflow-x: visible;
+	border-spacing: 0px 5px;
+}
+.right-side{
+	float: right;
+	width: 70%;
+	top: auto;
+	display: inline;
+	overflow-x: visible;
+	overflow-y: visible;
+}
+.buttonposition{
+	width:10%;
+	margin-left:12%;
+	}
+.imgstyle{
+	width: 19.5%;
+	height: 19.5%;
+	margin-left: 2%;
+	margin-right: 2%;
+	margin-top: 2%;
+	margin-bottom: 2%;
+	border-style: solid;
+	border-color: rgba(116,116,116,1.00);
+	border-collapse: collapse;
+	border-top-right-radius: 5px;
+	border-spacing: 5px 5px;
+	}
+.sendmsg{
+	width: 100%;
+	margin-top: 3%;
+	border-top: thin solid rgba(210,210,210,1.00);
+	padding-top:2%;
+	font-size: 18px;
+	}
+.msglist{
+	width: 10%;
+	margin-top: 1%;
+	}
+.textmsgsend{
+	width: 50%;
+	margin-top: 1%;
+	}
+.mask {
+	/*position: absolute;*/
+	position: fixed;
+	top: 0px;
+	filter: alpha(opacity=30);
+	background-color: #000000;
+	z-index: 1002;
+	left: 0px;
+	opacity: 0.5;
+	width:100%;
+	height:100%;
+	}
+.maskpic{
+	position: fixed;
+	/*position: absolute;*/
+	z-index: 1006;
+	width: 80%;
+	height: 80%;
+	/*position为absolute时的居中显示*/
+	left: 10%;
+	top: 10%;
+	/*margin: 0px auto;
+	align: middle;*/
+	}
+</style>
+<link href="../jQueryAssets/jquery.ui.core.min.css" rel="stylesheet" type="text/css">
+<link href="../jQueryAssets/jquery.ui.theme.min.css" rel="stylesheet" type="text/css">
+<link href="../jQueryAssets/jquery.ui.button.min.css" rel="stylesheet" type="text/css">
+<link href="../jQueryAssets/jquery.ui.progressbar.min.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div id="mask" class="mask" style="display:none"></div>
+<img id="maskpic" class="maskpic" src="../pic/bg.png" onerror="javascript:this.src='../pic/picerror.png';" style="display:none;" onClick="hideMask()"/>
+<div class="left-side" id="leftpage">
+<div class="tree well">
+<ul>
+	<li>
+		<span id="parent-span"><i class="icon-folder-open"></i> Parent</span> <a href="">Goes somewhere</a>
+		<ul>
+			<li>
+			  <span id="critty"><i class="icon-minus-sign"></i> A</span> <a href="">Goes somewhere</a>
+				<ul>
+					<li>
+					  <span><i class="icon-leaf"></i> a1</span>						<a href="">Goes somewhere</a>
+					</li>
+                    <li>
+						<span><i class="icon-leaf"></i> a2</span>						<a href="">Goes somewhere</a>
+					</li>
+                    <li>
+						<span><i class="icon-leaf"></i> a3</span>						<a href="">Goes somewhere</a>
+					</li>
+				</ul>
+			</li>
+            <li>
+				<span><i class="icon-minus-sign"></i> B</span> <a href="">Goes somewhere</a>
+				<ul>
+					<li>
+						<span><i class="icon-leaf"></i> b1</span>						<a href="">Goes somewhere</a>
+					</li>
+                    <li>
+						<span><i class="icon-leaf"></i> b2</span>						<a href="">Goes somewhere</a>
+					</li>
+                    <li>
+						<span><i class="icon-leaf"></i> b3</span>						<a href="">Goes somewhere</a>
+					</li>
+				</ul>
+			</li>
+            <li>
+				<span><i class="icon-minus-sign"></i> C</span> <a href="">Goes somewhere</a>
+				<ul>
+					<li>
+						<span><i class="icon-leaf"></i> c1</span>						<a href="">Goes somewhere</a>
+					</li>
+                    <li>
+						<span><i class="icon-leaf"></i> c2</span>						<a href="">Goes somewhere</a>
+					</li>
+                    <li>
+						<span><i class="icon-leaf"></i> c3</span>						<a href="">Goes somewhere</a>
+					</li>
+				</ul>
+			</li>
+			<li>
+				<span><i class="icon-minus-sign"></i> D</span> <a href="">Goes somewhere</a>
+				<ul>
+					<li>
+						<span><i class="icon-leaf"></i> d1</span> <a href="">Goes somewhere</a>
+					</li>
+					<!--<li>
+						<span><i class="icon-minus-sign"></i> Grand Child</span> <a href="">Goes somewhere</a>
+						<ul>
+							<li>
+								<span><i class="icon-minus-sign"></i> Great Grand Child</span> <a href="">Goes somewhere</a>
+								<ul>
+									<li>
+										<span><i class="icon-leaf"></i> Great great Grand Child</span> <a href="">Goes somewhere</a>
+									</li>
+									<li>
+										<span><i class="icon-leaf"></i> Great great Grand Child</span> <a href="">Goes somewhere</a>
+									</li>
+								 </ul>
+							</li>
+							<li>
+								<span><i class="icon-leaf"></i> Great Grand Child</span> <a href="">Goes somewhere</a>
+							</li>
+							<li>
+								<span><i class="icon-leaf"></i> Great Grand Child</span> <a href="">Goes somewhere</a>
+							</li>
+						</ul>
+					</li>-->
+					<li>
+						<span><i class="icon-leaf"></i> d2</span> <a href="">Goes somewhere</a>
+					</li>
+                    <li>
+						<span><i class="icon-leaf"></i> d3</span> <a href="">Goes somewhere</a>
+					</li>
+                    <li>
+						<span><i class="icon-leaf"></i> d4</span> <a href="">Goes somewhere</a>
+					</li>
+                    <li>
+						<span><i class="icon-leaf"></i> d5</span> <a href="">Goes somewhere</a>
+					</li>
+                    <li>
+						<span><i class="icon-leaf"></i> d6</span> <a href="">Goes somewhere</a>
+					</li>
+				</ul>
+			</li>
+            <li>
+				<span><i class="icon-minus-sign"></i> E</span> <a href="">Goes somewhere</a>
+				<ul>
+					<li>
+						<span><i class="icon-leaf"></i> e1</span>						<a href="">Goes somewhere</a>
+					</li>
+                    <li>
+						<span><i class="icon-leaf"></i> e2</span>						<a href="">Goes somewhere</a>
+					</li>
+                    <li>
+						<span><i class="icon-leaf"></i> e3</span>						<a href="">Goes somewhere</a>
+					</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	
+</ul>
+</div>
+</div>
+
+<div class="right-side" id="rightpage">
+  <p id="rightpage-title" style="text-align:center;font-size:24px;margin-top:1%">此处显示  class "right-side" id "rightpage" 的内容</p>
+  <p id="imgshow" style="min-height:500px;border-bottom: thin solid rgba(210,210,210,1.00);">
+  <img id="img1" src="../pic/picdefault.png" onerror="javascript:this.src='../pic/picerror.png';" alt="" class="imgstyle" onClick="showMask(this)" style="border:2px solid gray"/>
+  <img id="img2" src="../pic/picdefault.png" onerror="javascript:this.src='../pic/picerror.png';" alt="" class="imgstyle" onClick="showMask(this)" style="border:2px solid gray"/>
+  <img id="img3" src="../pic/picdefault.png" onerror="javascript:this.src='../pic/picerror.png';" alt="" class="imgstyle" onClick="showMask(this)" style="border:2px solid gray"/>
+  <img id="img4" src="../pic/picdefault.png" onerror="javascript:this.src='../pic/picerror.png';" alt="" class="imgstyle" onClick="showMask(this)" style="border:2px solid gray"/><br>
+  <img id="img5" src="../pic/picdefault.png" onerror="javascript:this.src='../pic/picerror.png';" alt="" class="imgstyle" onClick="showMask(this)" style="border:2px solid gray"/>
+  <img id="img6" src="../pic/picdefault.png" onerror="javascript:this.src='../pic/picerror.png';" alt="" class="imgstyle" onClick="showMask(this)" style="border:2px solid gray"/>
+ <img id="img7" src="../pic/picdefault.png" onerror="javascript:this.src='../pic/picerror.png';" alt="" class="imgstyle" onClick="showMask(this)" style="border:2px solid gray"/>
+ <img id="img8" src="../pic/picdefault.png" onerror="javascript:this.src='../pic/picerror.png';" alt="" class="imgstyle" onClick="showMask(this)" style="border:2px solid gray"/><br>
+  <img id="img9" src="../pic/picdefault.png" onerror="javascript:this.src='../pic/picerror.png';" alt="" class="imgstyle" onClick="showMask(this)" style="border:2px solid gray"/>
+  <img id="img10" src="../pic/picdefault.png" onerror="javascript:this.src='../pic/picerror.png';" alt="" class="imgstyle" onClick="showMask(this)" style="border:2px solid gray"/>
+  <img id="img11" src="../pic/picdefault.png" onerror="javascript:this.src='../pic/picerror.png';" alt="" class="imgstyle" onClick="showMask(this)" style="border:2px solid gray"/>
+  <img id="img12" src="../pic/picdefault.png" onerror="javascript:this.src='../pic/picerror.png';" alt="" class="imgstyle" onClick="showMask(this)" style="border:2px solid gray"/><br>
+  </p>
+  <p>
+  <!-- 给这个input 设置样式隐藏，切忌不可用display控制隐藏,可能不能跨浏览器 -->  
+    <!--<input type="file" id="file" onchange="getFilePath()" style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;"/>-->
+    <iframe style="display:none" name="hidden_iframe" ></iframe><!--隐藏帧-->
+	<form id="upload-form" style="filter:alpha(opacity=0);opacity:0;width: 0;height: 0;" action="http://localhost/dashboard/UPLOADFILEMETHOD/upload_p.php" method="POST"  enctype="multipart/form-data" style="margin:15px 0" target="hidden_iframe">
+    <input type="hidden" name="<?php echo ini_get("session.upload_progress.name"); ?>" value="test" />
+  <p><input type="file" name="myfile" onchange="getFilePath(this)"/></p>
+    <p><input type="submit" value="Upload" /></p>
+	</form>  
+  	<!--<button id="Button1" class="buttonposition" onClick="selectFile()">浏览</button>-->
+  <button id="Button1" class="buttonposition">浏览</button>
+  <button id="Button2" class="buttonposition">上传</button>
+  <button id="Button3" class="buttonposition">拆分</button>
+  <button id="Button4" class="buttonposition">应用</button>
+  </p>
+  <p id="detail" style="text-align:center">显示信息</p>
+  
+  <div id="Progressbar1"></div>
+  
+  <div class="sendmsg">
+  向
+<select id="selectlist" class="msglist">  
+  <option value="100">全部</option>  
+  <option value="0">0号</option>  
+  <option value="1">1号</option>  
+  <option value="2">2号</option>  
+  <option value="3">3号</option> 
+  <option value="4">4号</option>  
+  <option value="5">5号</option>  
+  <option value="6">6号</option>  
+  <option value="7">7号</option> 
+  <option value="8">8号</option>  
+  <option value="9">9号</option>  
+  <option value="10">10号</option>  
+  <option value="11">11号</option> 
+</select> 
+位置发送信息：
+<textarea id="textsendmessage" class="textmsgsend"></textarea>
+
+<button id="Button5" style="width:10%;margin-left:2%;font-size:16px;">发送</button>
+  </div>
+  
+</div>
+
+<script type="text/javascript">
+var startprogresstag = 0;
+var progressInterval;
+var host1 = window.location.host;
+var host2=document.domain;
+//var picurl = "http://"+host1+":2123/devide/test.bmp"
+var picurl = "../devide/test.bmp"
+var picurl1 = "http://"+host1+":2123/devide/test.png"
+var touser;
+var msgtext;
+var isfileok = 'NG';//判断选择的文件是否符合要求
+var isfilesend = 'NG';//判断文件是否上传
+
+$(function() {
+	$( "#Button1" ).button().click(function(){
+		if($currentID != 'UNKNOW'){
+		selectFile();//点击按钮时触发选择文件操作
+		$("#detail").html('当前应用类型为：'+$currentID);
+		}else{
+			alert('请先选择应用类型！');
+			$("#detail").html('当前应用类型未知！');
+			}
+		}); 
+});
+$(function() {
+	$( "#Button2" ).button().click(function(){
+		if(isfileok == 'OK'){
+		sendFile();
+		}else{
+			alert('请先选择pdf文件！');
+			$("#detail").html('请先选择pdf文件！');
+			}
+		}); 
+});
+$(function() {
+	$( "#Button3" ).button().click(function(){
+		if(isfilesend == 'OK'){
+		devideFile($currentID);
+		}else{
+			alert('请先上传pdf文件!');
+			$("#detail").html('请先上传pdf文件!');
+			}
+		}); 
+});
+$(function() {
+	$( "#Button4" ).button().click(function(){
+		if($currentID != 'UNKNOW'){
+		apply();
+		}else{
+			alert('请先选择应用类型！');
+			$("#detail").html('请先选择应用类型！');
+			}
+		}); 
+});
+$(function() {
+	$( "#Button5" ).button().click(function(){
+		sendmsgtext();
+		}); 
+});
+$(function() {
+	$( "#Progressbar1" ).progressbar(); 
+});
+
+function sendmsgtext(){
+	//touser = $("#selectlist").value;
+	touser =document.getElementById("selectlist").value;
+	//msgtext = $("#textsendmessage").value;
+	msgtext =document.getElementById("textsendmessage").value;
+	//alert(touser);
+$.ajax({
+   type: "POST", //请求方式
+   url: "server.php",//请求文件
+   data: "flag="+touser+"&"+"text="+msgtext,//传输的参数
+   success: function(msg){
+	//alert("消息发送状态："+msg);
+	$("#detail").html("消息发送状态："+msg);
+   }
+});
+	}
+
+/*当前文件应用函数*/
+function apply(){
+	$("#detail").html('域名为:'+host1); 
+	/*var xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");//用“GET”方法来判断远程服务器文件是否存在，存在则显示
+	xmlhttp.open("GET","http://localhost/dashboard/testserversend/devide/test.bmp",false);
+	xmlhttp.send();
+	if(xmlhttp.status==404)
+	alert('不存在');
+	else
+	alert("存在");*/
+	
+	/*$("#img1").attr('src',picurl);
+	$("#img2").attr('src',picurl);
+	$("#img3").attr('src',picurl);
+	$("#img4").attr('src',picurl);
+	$("#img5").attr('src',picurl);
+	$("#img6").attr('src',picurl);
+	$("#img7").attr('src',picurl);
+	$("#img8").attr('src',picurl);
+	$("#img9").attr('src',picurl);
+	$("#img10").attr('src',picurl);
+	$("#img11").attr('src',picurl1);*/
+	
+	sendToServer();
+	//$("#img12").attr('src',picurl);
+	}
+	
+/*信息分发*/
+function sendToServer(){
+   $.ajax({
+   type: "POST", //请求方式
+   url: "server.php",//请求文件
+   data: "flag=all&currentID="+$currentID,//传输的参数,flag与currentID
+   success: function(msg){
+	$("#detail").html('当前应用结果为:'+msg); 
+	alert('当前应用结果为:'+msg);
+   }
+});
+	}
+
+/*拆分pdf文件的函数*/
+function devideFile(flag){
+	startprogresstag = 0;
+	$( "#Progressbar1" ).progressbar("value", 0); //初始化进度条
+	$("#detail").html('正在进行文件拆分工作，请等待...'); 
+	//onProgress();//进度条自增
+	$.ajax({
+   type: "POST", //请求方式
+   url: "pdf2pic.php",//请求文件
+   data: "flag="+flag,//传输的参数
+   success: function(msg){
+	 clearInterval(progressInterval);//操作完成停止计时器
+	 startprogresstag = 100;
+	 $( "#Progressbar1" ).progressbar("value", 100); //初始化进度条
+	 $("#detail").html('文件拆分完成，可以进行应用操作!'); 
+	 //clearInterval(progressTimer);
+	 refreshimgshow();
+     //alert( "Result: " + msg);//返回的结果
+   }
+});
+	onProgress();//进度条自增
+	}
+	
+/*拆分完成后刷新图片预览界面*/
+function refreshimgshow(){
+	//$("#detail").html($currentID);
+	$("#img1").attr('src',"../thumbnail/"+$currentID+"/0.jpg"+"?t=" + Math.random());
+	$("#img2").attr('src',"../thumbnail/"+$currentID+"/1.jpg"+"?t=" + Math.random());
+	$("#img3").attr('src',"../thumbnail/"+$currentID+"/2.jpg"+"?t=" + Math.random());
+	$("#img4").attr('src',"../thumbnail/"+$currentID+"/3.jpg"+"?t=" + Math.random());
+	$("#img5").attr('src',"../thumbnail/"+$currentID+"/4.jpg"+"?t=" + Math.random());
+	$("#img6").attr('src',"../thumbnail/"+$currentID+"/5.jpg"+"?t=" + Math.random());
+	$("#img7").attr('src',"../thumbnail/"+$currentID+"/6.jpg"+"?t=" + Math.random());
+	$("#img8").attr('src',"../thumbnail/"+$currentID+"/7.jpg"+"?t=" + Math.random());
+	$("#img9").attr('src',"../thumbnail/"+$currentID+"/8.jpg"+"?t=" + Math.random());
+	$("#img10").attr('src',"../thumbnail/"+$currentID+"/9.jpg"+"?t=" + Math.random());
+	$("#img11").attr('src',"../thumbnail/"+$currentID+"/10.jpg"+"?t=" + Math.random());
+	$("#img12").attr('src',"../thumbnail/"+$currentID+"/11.jpg"+"?t=" + Math.random());
+	
+	isfileok = 'NG';//判断选择的文件是否符合要求标志初始化
+    isfilesend = 'NG';//判断文件是否上传标志初始化
+	
+	}
+
+/*选择文件函数*/
+function selectFile(){  
+   //触发 文件选择的click事件  
+   //$("#file").trigger("click");  
+   $( "#Progressbar1" ).progressbar("value", 0); //初始化进度条
+   $("input[name='myfile']").trigger("click");
+    }  
+	
+/*提交表单函数，即上传文件函数*/
+function sendFile(){  
+   //触发 文件选择的click事件  
+   //$("#file").trigger("click"); 
+   /*动态加载域名下的PHP文件*/
+   document.getElementById("upload-form").action="http://"+document.domain+"/dashboard/UPLOADFILEMETHOD/upload_p.php";
+   $("#upload-form").trigger("submit");
+    }
+              
+/* 获取 文件的路径 ，用于测试*/  
+function getFilePath(obj){  
+    //alert($("input[name='myfile']").attr("value")); //弹出对话框显示文件路劲
+	
+	photoExt=obj.value.substr(obj.value.lastIndexOf(".")).toLowerCase();//获得文件后缀名
+    if(photoExt!='.pdf'){
+        alert("请上传后缀名为pdf的文件!");
+		isfileok = 'NG';
+        return false;
+    }
+    var fileSize = 0;
+    var isIE = /msie/i.test(navigator.userAgent) && !window.opera;            
+    if (isIE && !obj.files) {          
+         var filePath = obj.value;            
+         var fileSystem = new ActiveXObject("Scripting.FileSystemObject");   
+         var file = fileSystem.GetFile (filePath);               
+         fileSize = file.Size;         
+    }else {  
+         fileSize = obj.files[0].size;     
+    } 
+    fileSize=Math.round(fileSize/1024*100)/100; //单位为KB
+    if(fileSize>=20*1024){
+        alert("文件最大尺寸为20MB，请重新上传!");
+		isfileok = 'NG';
+        return false;
+    }
+	
+	isfileok = 'OK';
+	
+	$("#detail").html("已选择的文件为："+$("input[name='myfile']").attr("value"));
+	
+    }
+	
+/*进度条自增函数*/
+function onProgress(){
+	// 随机时间   
+          //var timeout = randomTime(1500, 2000); 
+		  
+		  //$("#detail").html(timeout);  
+
+          //window.setTimeout(
+		  progressInterval = window.setInterval(
+		  /*function () {
+              // 如果页面加载完毕，则直接进度到 100%   
+              if($( "#Progressbar1" ).progressbar("value") >= 100){ 
+                  //$( "#Progressbar1" ).progressbar("value", 100);
+                  return;   
+              } 
+
+              // 随机进度   
+              progress += random(1, 5);  
+			  
+			  $("#detail").html('拆分进度：'+progress+'%'); 
+
+              // 随机进度不能超过 98%，以免页面还没加载完毕，进度已经 100% 了   
+              if(progress > 98){  
+                  progress = 98;   
+              }   
+
+				$( "#Progressbar1" ).progressbar("value", progress);
+
+              onProgress(progress);  
+			   
+          }*/
+		  "progressTimer()", 750);  
+		  
+		  //if(startprogresstag<100){
+		  //onProgress();
+		  //}
+		  
+	}
+	
+/*进度条延时随机增长函数*/
+function progressTimer(){
+	// 如果页面加载完毕，则直接进度到 100%   
+              if($( "#Progressbar1" ).progressbar("value") >= 100){ 
+                  //$( "#Progressbar1" ).progressbar("value", 100);
+				  //$("#detail").html('文件拆分完成，可以进行应用操作!');
+                  return;   
+              } 
+
+              // 随机进度   
+              startprogresstag += Math.floor(Math.random()*10);//返回Math.random（）*10，即[0,10]的整数部分
+			  //startprogresstag +=2;  
+
+              // 随机进度不能超过 98%，以免页面还没加载完毕，进度已经 100% 了   
+              if(startprogresstag > 90){  
+                  startprogresstag = 90;   
+              }   
+				$("#detail").html('拆分进度：'+startprogresstag+'%'); 
+				$( "#Progressbar1" ).progressbar("value", startprogresstag);
+
+	}
+	
+/*产生随机时间的函数*/
+function randomTime(minT,maxT){
+	return Math.floor(Math.random() * (maxT - minT + 1) + minT);   
+
+	}
+	
+//显示遮罩层
+function showMask(obj){
+        //$("#ast").css("height",$(document).height());     
+        //$("#ast").css("width",$(document).width()); 
+		//$("#maskpic").attr('src',obj.src+"?t=" + Math.random());  
+		$("#maskpic").attr('src',"../pic/bg.png");  
+		$("#maskpic").attr('src',obj.src.replace(/thumbnail/,"imgcollection")+"?t=" + Math.random());//将"thumbnail"路径指向"imgcollection"
+        $("#mask").show();
+		$("#maskpic").show();
+    }  
+	
+//隐藏遮罩层  
+function hideMask(){     
+        $("#maskpic").hide();
+        $("#mask").hide();     
+    }  
+	
+$(function() {
+	$( "#Progressbar1" ).progressbar(); 
+});
+
+function fetch_progress(){
+	 $("#detail").html('文件正在上传...');
+    $.get('progress.php',{ '<?php echo ini_get("session.upload_progress.name"); ?>' : 'test'}, function(data){
+        var progress = parseInt(data);
+        $("#detail").html("文件已上传："+progress + '%');
+		$( "#Progressbar1" ).progressbar("option", "value", progress); //进度条动态改变
+        if(progress < 100){
+            window.setTimeout('fetch_progress()', 20);    //当上传进度小于100%时，显示上传百分比
+        }else if(progress==100){
+            $("#detail").html('文件上传完成!'); //当上传进度等于100%时，显示上传完成
+			isfilesend = 'OK';
+        }
+    }, 'html');
+}
+
+$('#upload-form').submit(function(){
+    $('#Progressbar1').show();
+    window.setTimeout('fetch_progress()', 20);//每0.1秒执行一次fetch_progress()，查询文件上传进度
+});
+
+/*图片缩略图,暂时用不上*/
+function DrawImage(MyPic,W,H){
+  var flag=false;
+  var image=new Image();
+  image.src=MyPic.src;
+  if(image.width>0 && image.height>0){
+    flag=true;
+    if(image.width/image.height>= W/H){
+      if(image.width>W){  
+        MyPic.width=W;
+        MyPic.height=(image.height*W)/image.width;
+      }
+   else{
+        MyPic.width=image.width;  
+        MyPic.height=image.height;
+      }
+    }
+    else{
+      if(image.height>H){  
+        MyPic.height=H;
+        MyPic.width=(image.width*H)/image.height;     
+      }
+   else{
+        MyPic.width=image.width;  
+        MyPic.height=image.height;
+      }
+    }
+  }
+}
+
+</script>
+</body>
+</html>

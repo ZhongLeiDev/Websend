@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<link href="main.css" rel="stylesheet" type="text/css" />
+<script src='//cdn.bootcss.com/socket.io/1.3.7/socket.io.js'></script>
+<script src='//cdn.bootcss.com/jquery/1.11.3/jquery.js'></script>
+<script src='/notify.js'></script>
+<style type = "text/css">
+ html,body{ 
+ 	margin:0; 
+ 	height:100%; 
+ 	}
+</style> 
+</head>
+<body>
+
+<div class="notification sticky hide">
+    <p id="content" style="height:3%"> </p>
+    <a class="close" href="javascript:"> <img src="/icon-close.png" /></a><br><br><br>
+    </div>
+
+<p id="showmsg" style="text-align:center;font-size:200px;color:#FF0000;"><strong>A</strong></p>
+
+<div><img id="changepic" src="star.jpg" onerror="javascript:this.src='../pic/picerror.png';" style="margin-top:3%" alt=""/></div>  
+
+<script>
+
+var uid = Date.parse(new Date());
+//var number;
+
+$(document).ready(function () {
+	
+	//$("#changepic").css('width',document.body.clientWidth*0.97);//全局设置宽高
+	//$("#changepic").css('height',document.body.clientHeight*0.97);
+	
+$.ajax({//Ajax从服务器端获取远程连接的IP地址,并按照IP分配固定的UID进行登录
+   type: "POST", //请求方式
+   url: "getremoteip.php",//请求文件
+   data: "flag=getip",//传输的参数
+   success: function(msg){
+     //alert( "Result: " + msg);//返回的结果
+	 if(msg == '192.168.1.100'){
+		 uid = "192168001100";
+		 $("#showmsg").html("0");
+		 //number = "0";
+		 }else if(msg == '192.168.1.101'){
+			 uid = "192168001101";
+			 $("#showmsg").html("1");
+			 //number = "1";
+			 }else if(msg == '192.168.1.102'){
+				 uid = "192168001102";
+				 $("#showmsg").html("2");
+				 //number = "2";
+				 }else if(msg == '192.168.1.103'){
+					 uid = "192168001103";
+					 $("#showmsg").html("3");
+					 //number = "3";
+					 }else if(msg == '192.168.1.104'){
+			 			uid = "192168001104";
+						$("#showmsg").html("4");
+						//number = "4";
+			 			}else if(msg == '192.168.1.105'){
+				 			uid = "192168001105";
+							$("#showmsg").html("5");
+							//number = "5";
+				 			}else if(msg == '192.168.1.106'){
+								 uid = "192168001106";
+								 $("#showmsg").html("6");
+								//number = "6";
+					 			}else if(msg == '192.168.1.107'){
+									 uid = "192168001107";
+									 $("#showmsg").html("7");
+									 //number = "7";
+									 }else if(msg == '192.168.1.108'){
+										 uid = "192168001108";
+										 $("#showmsg").html("8");
+										 //number = "8";
+										 }else if(msg == '192.168.1.109'){
+					 						uid = "192168001109";
+											$("#showmsg").html("9");
+											//number = "9";
+					 						}else if(msg == '192.168.1.110'){
+												 uid = "192168001110";
+												 $("#showmsg").html("10");
+												 //number = "10";
+												 }else if(msg == '192.168.1.111'){
+													 uid = "192168001111";
+													 $("#showmsg").html("11");
+													 //number = "11";
+														 }
+	 connectserver();
+   }
+});
+});
+
+function connectserver(){
+	// 连接服务端
+    var socket = io('http://'+document.domain+':2120');
+    // 连接后登录
+    socket.on('connect', function(){
+    	socket.emit('login', uid);
+    });
+    // 后端推送来消息时
+    socket.on('new_msg', function(msg){
+		$("#changepic").css('width',document.body.clientWidth*0.96);//动态设置宽高
+		$("#changepic").css('height',document.body.clientHeight*0.96);
+		var param = new Array();
+		param = msg.split("#");
+		//alert(msg);
+		if(param[0] == "新的策略已更新！"){//当点击Console.html中的“应用”按钮时更新图片，其它的更新信息
+		$('#content').html("新的策略已更新！当前应用的策略为："+param[1]);
+        $('.notification.sticky').notify();
+		if(uid == 192168001100){
+		 $('#changepic').attr('src', "../imgcollection/"+param[1]+"/0.jpg"+"?t=" + Math.random());//在后方加入"?t=xxxx"是为了刷新浏览器URL缓存，防止图像url未变但是图像内容改变造成图像引用不能刷新，十分重要！！！
+		 }else if(uid == 192168001101){
+			 $('#changepic').attr('src', "../imgcollection/"+param[1]+"/1.jpg"+"?t=" + Math.random());
+			 }else if(uid == 192168001102){
+				 $('#changepic').attr('src', "../imgcollection/"+param[1]+"/2.jpg"+"?t=" + Math.random());
+				 }else if(uid == 192168001103){
+					 $('#changepic').attr('src', "../imgcollection/"+param[1]+"/3.jpg"+"?t=" + Math.random());
+					 }else if(uid == 192168001104){
+					 $('#changepic').attr('src', "../imgcollection/"+param[1]+"/4.jpg"+"?t=" + Math.random());
+					 }else if(uid == 192168001105){
+					 $('#changepic').attr('src', "../imgcollection/"+param[1]+"/5.jpg"+"?t=" + Math.random());
+					 }else if(uid == 192168001106){
+					 $('#changepic').attr('src', "../imgcollection/"+param[1]+"/6.jpg"+"?t=" + Math.random());
+					 }else if(uid == 192168001107){
+					 $('#changepic').attr('src', "../imgcollection/"+param[1]+"/7.jpg"+"?t=" + Math.random());
+					 }else if(uid == 192168001108){
+					 $('#changepic').attr('src', "../imgcollection/"+param[1]+"/8.jpg"+"?t=" + Math.random());
+					 }else if(uid == 192168001109){
+					 $('#changepic').attr('src', "../imgcollection/"+param[1]+"/9.jpg"+"?t=" + Math.random());
+					 }else if(uid == 192168001110){
+					 $('#changepic').attr('src', "../imgcollection/"+param[1]+"/10.jpg"+"?t=" + Math.random());
+					 }else if(uid == 192168001111){
+					 $('#changepic').attr('src', "../imgcollection/"+param[1]+"/11.jpg"+"?t=" + Math.random());
+					 }
+		document.getElementById("showmsg").style.display="none";//隐藏控件
+		}else{
+			if(param[0] == "SHOW"){
+				var elem = document.getElementById("showmsg");//得到控件
+				//elem.html(number);
+				elem.style.display = "";//以默认规则重新显示控件
+				//elem.style.textAlign = "center";				
+				
+			}else{
+		 		$('#content').html('新消息：'+msg);
+         		$('.notification.sticky').notify();
+			}
+		}
+		 //$('#showmsg').html('你已收到新的消息:'+msg);
+		 //alert(document.body.clientHeight);
+    });
+    // 后端推送来在线数据时
+    socket.on('update_online_count', function(online_stat){
+        $('#online_box').html(online_stat);
+    });
+	}
+
+</script>
+<div id="footer">
+<center id="online_box"></center>
+<center><p style="font-size:11px;color:#555;"> Powered by <a href="http://www.workerman.net/web-sender" target="_blank"><strong>web-msg-sender!</strong></a></p></center>
+</div>
+</body>
+</html>
