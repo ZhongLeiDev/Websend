@@ -47,3 +47,9 @@
 ![image](https://github.com/ZhongLeiDev/ZhongLeiDev.github.io/blob/master/websendimg/aaa.PNG)
 
 有了这样一个系统可以以一台 PC 作为控制端，向其它的 Client 端同步推送图片显示信息或者直接推送指令信息。
+
+运行之后就像这样：
+
+![image](https://github.com/ZhongLeiDev/ZhongLeiDev.github.io/blob/master/websendimg/bbb.PNG)
+
+左侧是 Server 端，点击"应用"按钮后右侧的 Client 端浏览器就会显示左侧图片预览现实的图片，Client 浏览器上方还会显示 Server 端发送的说明信息以及指令信息。自己定义好自己的传输协议，稍微更改一下 Server 端的 Console.html 以及 Client 端的 client.html 文件还可以实现其它的更加丰富的功能，用 Server 端控制 Client 端播放指定的视频文件以及音频文件都是可以实现的哦~
